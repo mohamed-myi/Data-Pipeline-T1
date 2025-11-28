@@ -1,7 +1,19 @@
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
+from database import initDatabase
 
-app = FastAPI(title="Data Pipeline API", version="1.0.0")
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    '''
+    Startup and shutdown event handler for FastAPI application
+    '''
+    initDatabase()
+    print("Database initialized")
+    yield
+    print("Application shutdown")
+
+
+app = FastAPI(title="Data Pipeline API", version="1.0.0", lifespan=lifespan)
 
 
 @app.get("/health")
@@ -14,12 +26,6 @@ def checkHealth():
 
 if __name__ == "__main__":
     import uvicorn
-    from dotenv import load_dotenv
-    import os
+    from config import API_HOST, API_PORT
     
-    load_dotenv()
-    
-    host = os.getenv("API_HOST", "0.0.0.0")
-    port = int(os.getenv("API_PORT", 8000))
-    
-    uvicorn.run(app, host=host, port=port)
+    uvicorn.run(app, host=API_HOST, port=API_PORT)
