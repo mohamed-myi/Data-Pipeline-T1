@@ -1,14 +1,21 @@
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
 from database import initDatabase
+from config import validateConfig, ENVIRONMENT
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     '''
     Startup and shutdown event handler for FastAPI application
     '''
-    initDatabase()
-    print("Database initialized")
+    try:
+        validateConfig()
+        initDatabase()
+        print(f"Database initialized (Environment: {ENVIRONMENT})")
+    except ValueError as e:
+        print(f"Configuration error: {e}")
+        raise
+    
     yield
     print("Application shutdown")
 
