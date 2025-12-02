@@ -1,0 +1,16 @@
+# Data Pipeline Configuration
+# PostgreSQL database connection string
+DATABASE_URL: "postgresql://user:password@localhost:5432/data_pipeline"
+
+# API server configuration
+API_HOST: "0.0.0.0"
+API_PORT: 8000
+
+# Application environment (development, testing, production)
+ENVIRONMENT: "development"
+
+# Debug mode for development
+DEBUG: true
+
+# Logging level (DEBUG, INFO, WARNING, ERROR, CRITICAL)
+LOG_LEVEL: "INFO"
